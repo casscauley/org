@@ -1,5 +1,8 @@
+;; before using org/ln.sh do the following
+;; M-x list-packages
+;; find org
+;; i + x (highlight install and install)
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
 (unless package-archive-contents
@@ -41,7 +44,6 @@
 
 (setq auto-save-visited-interval 300)
 
-(require 'web-mode)
 (add-to-list 'auto-mode-alist'("\\.js\\'" . rjsx-mode))
 (add-to-list 'auto-mode-alist '("\\.jscad\\'" . rjsx-mode))
 (add-to-list 'auto-mode-alist '("\\.json\\'" . js-mode))
