@@ -57,7 +57,6 @@
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . css-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . rst-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\'" . html-mode))
-(require 'org-install)
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (define-key global-map "\C-cl" 'org-store-link)
 (define-key global-map "\C-ca" 'org-agenda)
@@ -98,13 +97,6 @@
  ;; If there is more than one, they won't work right.
  )
  ;; custom-set-faces was added by Custom.
-
-;;; Provide vimmy escape hatch to `evil-mode'.  Press ⌘-/ or M-⌘-/ to
-;;; toggle `evil-mode'.
-(global-set-key (kbd "s-/") 'evil-mode)
-(global-set-key (kbd "M-/") 'evil-mode)
-(global-set-key (kbd "M-s-/") 'evil-mode)
-(global-set-key (kbd "M-SPC") 'set-mark-command)
 
 (defun xah-comment-dwim ()
   "Like `comment-dwim', but toggle comment if cursor is not at end of line.
