@@ -7,3 +7,4 @@ ur/*
 _node_modules
 .venv
 .dir-locals.el
+certs/*

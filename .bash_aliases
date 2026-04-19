@@ -73,9 +73,8 @@ function tt {
 
 function e {
     if command -v deactivate > /dev/null; then deactivate; fi
-    if [[ -d .e ]]; then source .e/bin/activate;
-    elif [[ -d .env ]]; then source .env/bin/activate;
-    elif [[ -d .venv ]]; then source .venv/bin/activate; fi
+    if [[ -d .venv ]]; then source .venv/bin/activate; fi
+    if [[ -d ../.venv ]]; then source ../.venv/bin/activate; fi
 
     if [[ -e .envrc ]]; then source .envrc; fi
 }
@@ -198,5 +197,131 @@ function png2pnm {
     FNAME="${FNAME%.*}"
 
     convert $1 -background white -alpha remove -alpha off $FNAME.pnm
+}
+
+function git-prune-branches {
+    local current merged
+    current=$(git branch --show-current)
+    merged=$(git branch --merged | sed 's/^[* ]*//' | xargs -n1)
+
+    local -a names ages flags
+    while IFS= read -r branch; do
+        [[ "$branch" == "$current" ]] && continue
+        [[ -z "$branch" ]] && continue
+        local age flag
+        age=$(git log -1 --format='%cr' "$branch" 2>/dev/null || echo "unknown")
+        if grep -qxF "$branch" <<< "$merged"; then
+            flag="-d (merged)"
+        else
+            flag="-D (NOT merged)"
+        fi
+        names+=("$branch")
+        ages+=("$age")
+        flags+=("$flag")
+    done < <(git for-each-ref --sort=committerdate --format='%(refname:short)' refs/heads/)
+
+    if [[ ${#names[@]} -eq 0 ]]; then
+        echo "No branches to delete (only $current exists)."
+        return 0
+    fi
+
+    echo ""
+    echo "Local branches (current: $current):"
+    echo "---"
+    for j in "${!names[@]}"; do
+        printf "  %2d) %-40s  %-20s  %s\n" $((j+1)) "${names[$j]}" "${ages[$j]}" "${flags[$j]}"
+    done
+    echo ""
+
+    local input
+    read -rp "Enter branch numbers to delete (space/comma separated, or q to quit): " input
+    [[ "$input" == "q" || -z "$input" ]] && echo "Aborted." && return 0
+
+    local -a selections to_delete delete_ages delete_flags
+    IFS=', ' read -ra selections <<< "$input"
+    for sel in "${selections[@]}"; do
+        [[ -z "$sel" ]] && continue
+        if ! [[ "$sel" =~ ^[0-9]+$ ]] || (( sel < 1 || sel > ${#names[@]} )); then
+            echo "Invalid selection: $sel"
+            return 1
+        fi
+        local idx=$((sel - 1))
+        to_delete+=("${names[$idx]}")
+        delete_ages+=("${ages[$idx]}")
+        delete_flags+=("${flags[$idx]}")
+    done
+
+    if [[ ${#to_delete[@]} -eq 0 ]]; then
+        echo "No branches selected."
+        return 0
+    fi
+
+    echo ""
+    echo "Branches flagged for deletion:"
+    echo "---"
+    for j in "${!to_delete[@]}"; do
+        printf "  %-40s  %-20s  %s\n" "${to_delete[$j]}" "${delete_ages[$j]}" "${delete_flags[$j]}"
+    done
+    echo ""
+    local confirm
+    read -rp "Are you sure? (y/Y to confirm): " confirm
+    if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+        echo "Aborted."
+        return 0
+    fi
+
+    for j in "${!to_delete[@]}"; do
+        local branch="${to_delete[$j]}"
+        if [[ "${delete_flags[$j]}" == *"merged"* ]]; then
+            git branch -d "$branch"
+        else
+            git branch -D "$branch"
+        fi
+    done
+    echo "Done."
+}
+
+function statusall {
+    local do_push=false
+    if [ "$1" = "--push" ]; then do_push=true; fi
+    local clean=()
+    local pushed=()
+    for dir in ~/projects/*/; do
+        if [ -d "$dir/.git" ]; then
+            local name=$(basename "$dir")
+            local status=$(git -C "$dir" status -s)
+            local unpushed=$(git -C "$dir" log --oneline @{u}..HEAD 2>/dev/null)
+            if [ -z "$status" ] && [ -z "$unpushed" ]; then
+                clean+=("$name")
+            else
+                echo "=== $name ==="
+                [ -n "$status" ] && echo "$status"
+                if [ -n "$unpushed" ]; then
+                    if $do_push; then
+                        local push_output
+                        push_output=$(git -C "$dir" push 2>&1)
+                        if [ $? -eq 0 ]; then
+                            echo "  **pushed**"
+                            pushed+=("$name")
+                        else
+                            echo "$push_output"
+                        fi
+                    else
+                        echo "  unpushed:"
+                        echo "$unpushed" | sed 's/^/    /'
+                    fi
+                fi
+                echo
+            fi
+        fi
+    done
+    if [ ${#pushed[@]} -gt 0 ]; then
+        echo "=== pushed ==="
+        printf '    %s\n' "${pushed[@]}"
+    fi
+    if [ ${#clean[@]} -gt 0 ]; then
+        echo "=== no changes ==="
+        printf '    %s\n' "${clean[@]}"
+    fi
 }
 
