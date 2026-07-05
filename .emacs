@@ -17,6 +17,7 @@
 (setq require-final-newline nil)
 (setq mode-require-final-newline nil)
 (add-hook 'org-mode-hook 'toggle-truncate-lines)
+(setq org-startup-folded 'overview)
 
 ;; nuke auto indent because I don't play like that
 (electric-indent-mode -1)

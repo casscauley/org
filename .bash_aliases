@@ -272,11 +272,7 @@ function git-prune-branches {
 
     for j in "${!to_delete[@]}"; do
         local branch="${to_delete[$j]}"
-        if [[ "${delete_flags[$j]}" == *"merged"* ]]; then
-            git branch -d "$branch"
-        else
-            git branch -D "$branch"
-        fi
+        git branch -D "$branch"
     done
     echo "Done."
 }
