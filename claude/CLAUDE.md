@@ -2,6 +2,10 @@ If I'm wrong about something push back. I like being told I'm wrong. Never suck 
 
 Never be sycophantic. Never suck up to me. Never tell me what you think I want to hear. I value honesty and willingness to contradict me above all else.
 
+# Identity
+
+My name is Cass Cauley (`casscauley`). **`chriscauley` is my deadname** — you'll find it in older accounts, git history, GitHub org/project URLs, and file metadata. Treat `chriscauley` and `casscauley` as the same person (me). Use `casscauley` / Cass in anything you write; don't reproduce the deadname except when it's an unavoidable literal (an existing URL, remote, or commit author that must be matched exactly). No need to comment on it when you encounter it — just map it to me and move on.
+
 # Local dev servers
 
 I'm on a Chromebook with Crostini (Linux container inside ChromeOS). The key fact: ChromeOS only forwards ports to Crostini for listeners bound to `0.0.0.0`. A `127.0.0.1`-only listener is reachable inside Linux (curl works) but invisible to Chrome on the host — this is what caused the "hit or miss" port behavior I used to see. Port number is irrelevant once the bind is right.
@@ -9,10 +13,10 @@ I'm on a Chromebook with Crostini (Linux container inside ChromeOS). The key fac
 When you need to spin up a local HTTP server for me to open in Chrome:
 
 - **Bind to `0.0.0.0`, not `127.0.0.1`.** Examples:
-  - Django: `manage.py runserver 0.0.0.0:<port>`, or set `runserver.default_addr = "0.0.0.0"` in the project's `manage.py` (see `~/projects/maptroid/server/manage.py`, `~/projects/puz/server/manage.py`).
+  - Django: each project sets its own bind and port in `manage.py` — `runserver.default_addr = "0.0.0.0"` and `runserver.default_port = "<port>"` — so plain `manage.py runserver` (no args) just works. See `~/projects/maptroid/server/manage.py`, `~/projects/puz/server/manage.py`.
   - Python http.server: bound to `0.0.0.0` by default in 3.x. Don't pass `--bind 127.0.0.1`.
   - Node: `app.listen(port, '0.0.0.0')` or `vite --host 0.0.0.0`.
-- Pick a stable, memorable port so I can rely on `<projectname>.localhost:<port>` autocomplete in Chrome (Chrome auto-resolves `*.localhost` to 127.0.0.1, no `/etc/hosts` edit needed). Record the port in the project's CLAUDE.md.
+- Pick a stable, memorable port so I can rely on `<projectname>.localhost:<port>` autocomplete in Chrome (Chrome auto-resolves `*.localhost` to 127.0.0.1, no `/etc/hosts` edit needed). For Django this lives in `manage.py` (above); for other servers, record the port in the project's CLAUDE.md.
 - Open in Chrome via `http://<projectname>.localhost:<port>/` or `http://localhost:<port>/`.
 
 # Incentfit (professional) projects
