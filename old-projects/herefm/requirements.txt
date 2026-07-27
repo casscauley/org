@@ -1,4 +1,4 @@
 sorl-thumbnail==11.12
 django-tagging==0.3.1
 django-voting==0.1
-requests==0.10.8
+requests==2.20.0
