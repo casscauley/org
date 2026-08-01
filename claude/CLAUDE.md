@@ -19,6 +19,14 @@ When you need to spin up a local HTTP server for me to open in Chrome:
 - Pick a stable, memorable port so I can rely on `<projectname>.localhost:<port>` autocomplete in Chrome (Chrome auto-resolves `*.localhost` to 127.0.0.1, no `/etc/hosts` edit needed). For Django this lives in `manage.py` (above); for other servers, record the port in the project's CLAUDE.md.
 - Open in Chrome via `http://<projectname>.localhost:<port>/` or `http://localhost:<port>/`.
 
+# Comments
+
+Applies to every project and every language.
+
+Comment the *why*, never the *what*. A comment earns its place only if it records something the code cannot: a constraint from elsewhere in the system, a tradeoff considered and rejected, a magic number's provenance, a gotcha that will bite the next edit.
+
+Do not write comments that restate the line below them, paraphrase a function name, or act as section banners. Delete them on sight in code you touch.
+
 # Incentfit (professional) projects
 
 This section is for incentfit only stuff. It should only be executed in directories inside ~/incentfit-website/
