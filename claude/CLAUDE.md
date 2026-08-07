@@ -41,6 +41,22 @@ Everything below here only applies to personal projects, these rules do not appl
 
 Before editing files in or committing to a sibling repo under `~/projects/*` (most commonly `unrest-ui` or `unrest-server`), read that repo's `CLAUDE.md` first if one exists. Sibling `CLAUDE.md` files are **not** auto-loaded by the startup scan when you launch Claude from a different directory, so repo-specific workflow rules (changelog, release, versioning) are otherwise invisible.
 
+## Backlog
+
+`backlog/` at the repo root holds two different things:
+
+- `backlog/notes/` is an **inbox**. `unrest_api.backlog` writes it from the admin `notes` view — `YYYY-MM-DD-slug.md` with `title`/`created`/`author` frontmatter, images alongside in `backlog/notes/img/` as `<note-stem>-N.<ext>`. Don't hand-author these; the library owns the layout and creates the directories itself.
+- `backlog/*.md` are **curated tasks**, one file per task, written to be picked up cold: what the code looks like today, what it should look like after, and how to tell it worked. `backlog/README.md` indexes them. `~/projects/hive.js/backlog/` is the reference version.
+
+`/note` reads the inbox, newest first. A note is one of two things, and how I phrase the request says which:
+
+- **Fix it now** - the note is a handoff, not a record. Do the work, then delete the note and every image it references in the same commit as the fix.
+- **File it for later** - don't build anything. Promote it into a task file at `backlog/<slug>.md`, add it to the README index, and delete the note. If the repo has no task files yet, leave the note in place to be committed instead.
+
+Ask if it isn't clear which.
+
+Notes are also how screenshots reach a Claude running on a production box - `/dl` reads the ChromeOS Downloads share, which only exists inside the Crostini container.
+
 ## @unrest/ui shared library
 
 `~/projects/unrest-ui/` is a shared Vue component library used by all personal projects. Projects reference it via a vite alias pointing to its dist output. When fixing or modifying components from `@unrest/ui`, edit the source in `~/projects/unrest-ui/src/` and rebuild with `cd ~/projects/unrest-ui && npm run build`. Always make me aware that `@unrest/ui` has been modified and do not commit changes to this directory when I tell you to commit another project. I will worry about committing it's code separately
