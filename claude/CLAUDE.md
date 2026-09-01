@@ -6,9 +6,25 @@ Never be sycophantic. Never suck up to me. Never tell me what you think I want t
 
 My name is Cass Cauley (`casscauley`). **`chriscauley` is my deadname** — you'll find it in older accounts, git history, GitHub org/project URLs, and file metadata. Treat `chriscauley` and `casscauley` as the same person (me). Use `casscauley` / Cass in anything you write; don't reproduce the deadname except when it's an unavoidable literal (an existing URL, remote, or commit author that must be matched exactly). No need to comment on it when you encounter it — just map it to me and move on.
 
-# Local dev servers
+# Which machine is this?
 
-I'm on a Chromebook with Crostini (Linux container inside ChromeOS). The key fact: ChromeOS only forwards ports to Crostini for listeners bound to `0.0.0.0`. A `127.0.0.1`-only listener is reachable inside Linux (curl works) but invisible to Chrome on the host — this is what caused the "hit or miss" port behavior I used to see. Port number is irrelevant once the bind is right.
+`~/org` is one git repo synced to every box I use, and this file lives in it, so
+nothing here can assume a machine. Check before you assume one. Two kinds of box
+run Claude:
+
+- **My laptop** — a Chromebook running Crostini. `/opt/google/cros-containers`
+  exists. Dev work, no live site.
+- **A production server** — a plain VM; that directory does not exist. There
+  `~/projects/<name>` is the *live checkout*: a build or a service reload is a
+  deploy, and there is no other box to ssh into. The project's own CLAUDE.md
+  names its production host — if that host is this host, you are on it.
+
+`ls /opt/google/cros-containers` settles it in one command. The section below is
+laptop-only; on a production box none of it applies.
+
+# Local dev servers (laptop only)
+
+My laptop is a Chromebook with Crostini (Linux container inside ChromeOS). The key fact: ChromeOS only forwards ports to Crostini for listeners bound to `0.0.0.0`. A `127.0.0.1`-only listener is reachable inside Linux (curl works) but invisible to Chrome on the host — this is what caused the "hit or miss" port behavior I used to see. Port number is irrelevant once the bind is right.
 
 When you need to spin up a local HTTP server for me to open in Chrome:
 
