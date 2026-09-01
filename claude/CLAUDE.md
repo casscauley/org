@@ -19,8 +19,12 @@ run Claude:
   deploy, and there is no other box to ssh into. The project's own CLAUDE.md
   names its production host — if that host is this host, you are on it.
 
-`ls /opt/google/cros-containers` settles it in one command. The section below is
-laptop-only; on a production box none of it applies.
+**The absolute path is the fastest tell: if the project sits under
+`/home/clepsy/projects/*`, this box is `skade`** — the production server, and
+production for every project it hosts. The laptop's checkouts are not under that
+path. `ls /opt/google/cros-containers` confirms it the other way in one command.
+
+The section below is laptop-only; on a production box none of it applies.
 
 # Local dev servers (laptop only)
 
