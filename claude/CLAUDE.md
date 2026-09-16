@@ -63,15 +63,21 @@ Before editing files in or committing to a sibling repo under `~/projects/*` (mo
 
 ## Backlog
 
-`backlog/` at the repo root holds two different things:
+`docs/backlog/` holds two different things:
 
-- `backlog/notes/` is an **inbox**. `unrest_api.backlog` writes it from the admin `notes` view — `YYYY-MM-DD-slug.md` with `title`/`created`/`author` frontmatter, images alongside in `backlog/notes/img/` as `<note-stem>-N.<ext>`. Don't hand-author these; the library owns the layout and creates the directories itself.
-- `backlog/*.md` are **curated tasks**, one file per task, written to be picked up cold: what the code looks like today, what it should look like after, and how to tell it worked. `backlog/README.md` indexes them. `~/projects/hive.js/backlog/` is the reference version.
+- `docs/backlog/notes/` is an **inbox**. `unrest_api.backlog` writes it from the admin `notes` view — `YYYY-MM-DD-slug.md` with `title`/`created`/`author` frontmatter, images alongside in `notes/img/` as `<note-stem>-N.<ext>`. Don't hand-author these; the library owns the layout and creates the directories itself.
+- `docs/backlog/*.md` are **curated tasks**, one file per task, written to be picked up cold: what the code looks like today, what it should look like after, and how to tell it worked. `docs/backlog/README.md` indexes them. `~/projects/weather/docs/backlog/` is the reference version.
+
+The library defaults to `backlog/` at the repo root, so a Django project needs
+`UNREST_BACKLOG_ROOT = BASE_DIR.parent / 'docs' / 'backlog'` in settings to write
+the inbox here. Older repos still have a root-level `backlog/` or a `docs/todos/`
+— migrate them to this layout when you next touch them rather than adding to the
+old one.
 
 `/note` reads the inbox, newest first. A note is one of two things, and how I phrase the request says which:
 
 - **Fix it now** - the note is a handoff, not a record. Do the work, then delete the note and every image it references in the same commit as the fix.
-- **File it for later** - don't build anything. Promote it into a task file at `backlog/<slug>.md`, add it to the README index, and delete the note. If the repo has no task files yet, leave the note in place to be committed instead.
+- **File it for later** - don't build anything. Promote it into a task file at `docs/backlog/<slug>.md`, add it to the README index, and delete the note. If the repo has no task files yet, leave the note in place to be committed instead.
 
 Ask if it isn't clear which.
 
